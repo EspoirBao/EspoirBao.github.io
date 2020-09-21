@@ -64,7 +64,6 @@ import {
   
   export default ant
 
-export default ant
 ```
 + src/main.js（修改）
 ```
