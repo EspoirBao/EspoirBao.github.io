@@ -126,3 +126,63 @@ export default {
   </div>
 </template>
 ```
+
+
+# zao vue.vue.config.js 
+```
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin') 
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+module.exports = {
+  publicPath: './',
+  lintOnSave: true,//启用lint保存
+  productionSourceMap: false,//禁用SourceMap
+  chainWebpack: (config) => {
+    config.resolve.alias//配置别名
+      .set('@$', resolve('src'))
+      .set('assets', resolve('src/assets'))
+      .set('components', resolve('src/components'))
+      .set('static', resolve('src/static'))
+
+  },
+  devServer: {//开发环境服务器代理配置
+    proxy: {
+      '/zao': {
+        target: 'https://isdk.zaoyx.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/zao': ''
+        }
+      },
+      '/local': {
+        target: 'http://app.9hplay.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/local': ''
+        }
+      }
+    }
+  },
+  configureWebpack: {//webpack配置
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            ecma: undefined,
+            warnings: false,
+            parse: {},
+            compress: {
+              drop_console: true,
+              drop_debugger: false,
+              pure_funcs: ['console.log'] // 移除console
+            }
+          },
+        }),
+      ]
+    }
+  },
+}
+```
+
