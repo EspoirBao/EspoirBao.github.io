@@ -186,3 +186,7 @@ module.exports = {
 }
 ```
 
+去除log reg
+
+```
+console\.log\(.*?\)
